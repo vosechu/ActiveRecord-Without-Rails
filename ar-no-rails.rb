@@ -1,9 +1,4 @@
-require 'active_record'
-
-require './lib/connection'
-require './models/page'
-
-Connection.connect
+require './lib/boot'
 
 if __FILE__ == $0
   puts "Count of Pages: #{Page.count}"

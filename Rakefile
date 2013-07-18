@@ -1,7 +1,4 @@
-require 'pg'
-require 'active_record'
-
-require './lib/connection'
+require './lib/boot'
 
 namespace :db do
 
