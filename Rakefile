@@ -1,34 +1,31 @@
-require "rubygems"
-require "bundler/setup"
-
 require 'pg'
 require 'active_record'
-require 'yaml'
+
+require './lib/connection'
 
 namespace :db do
 
+  task :connect do
+    Connection.connect
+  end
+
+  task :connect_admin do
+    Connection.connect(admin: true)
+  end
+
   desc "Migrate the db"
-  task :migrate do
-    connection_details = YAML::load(File.open('config/database.yml'))
-    ActiveRecord::Base.establish_connection(connection_details)
+  task :migrate => :connect do
     ActiveRecord::Migrator.migrate("db/migrate/")
   end
 
   desc "Create the db"
-  task :create do
-    connection_details = YAML::load(File.open('config/database.yml'))
-    admin_connection = connection_details.merge({'database'=> 'postgres', 
-                                                'schema_search_path'=> 'public'}) 
-    ActiveRecord::Base.establish_connection(admin_connection)
-    ActiveRecord::Base.connection.create_database(connection_details.fetch('database'))
+  task :create => :connect_admin do
+    ActiveRecord::Base.connection.create_database('ar-no-rails')
   end
 
   desc "drop the db"
-  task :drop do
-    connection_details = YAML::load(File.open('config/database.yml'))
-    admin_connection = connection_details.merge({'database'=> 'postgres', 
-                                                'schema_search_path'=> 'public'}) 
-    ActiveRecord::Base.establish_connection(admin_connection)
-    ActiveRecord::Base.connection.drop_database(connection_details.fetch('database'))
+  task :drop => :connect_admin do
+    ActiveRecord::Base.connection.drop_database('ar-no-rails')
   end
+
 end
