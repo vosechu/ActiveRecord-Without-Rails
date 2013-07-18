@@ -4,7 +4,7 @@ require 'lib/boot'
 namespace :db do
 
   task :connect do
-    Connection.connect
+    # Already connected by lib/boot
   end
 
   task :connect_admin do
