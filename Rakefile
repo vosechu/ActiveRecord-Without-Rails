@@ -1,4 +1,5 @@
-require './lib/boot'
+$:.unshift File.expand_path('.')
+require 'lib/boot'
 
 namespace :db do
 
